@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>e-HRMS Modern Portal</title>
+  <title>e-HRMS Portal - Government of India</title>
 
   <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -11,69 +11,469 @@
   <!-- Alpine.js -->
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Hind:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
   <style>
+    :root {
+      --primary: #1e40af;
+      --primary-dark: #1e3a8a;
+      --secondary: #334155;
+      --accent: #0f766e;
+      --light-bg: #f8fafc;
+      --card-bg: #ffffff;
+    }
+    
     body {
-      background: linear-gradient(to bottom right, #0f172a, #1e1b4b, #3b0764);
+      background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+      font-family: 'Inter', sans-serif;
+      color: #334155;
+      overflow-x: hidden;
+      position: relative;
+    }
+    
+    .hindi {
+      font-family: 'Hind', sans-serif;
+    }
+    
+    /* Subtle background pattern */
+    .bg-pattern {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(30, 64, 175, 0.03) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(15, 118, 110, 0.03) 0%, transparent 20%);
+      z-index: -1;
+    }
+    
+    /* Header with official gradient */
+    .header-bg {
+      background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+    }
+    
+    /* Full blue band section */
+    .blue-band {
+      background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+      color: white;
+      padding: 3rem 0;
+      margin: 2rem 0;
+    }
+    
+    /* Card styles */
+    .govt-card {
+      background: var(--card-bg);
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+      transition: all 0.3s ease;
+    }
+    
+    .govt-card:hover {
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      transform: translateY(-2px);
+    }
+    
+    /* Language toggle */
+    .lang-toggle {
+      position: relative;
+      display: inline-flex;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      padding: 2px;
+    }
+    
+    .lang-option {
+      padding: 6px 16px;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+    
+    .lang-option.active {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    
+    /* Subtle animations */
+    .fade-in {
+      animation: fadeIn 0.8s ease-in;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Official badge style */
+    .official-badge {
+      background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);
+      color: white;
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 2px;
+    }
+    
+    /* Module icon styling */
+    .module-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+      background: #f1f5f9;
+      color: var(--primary);
+    }
+    
+    /* Button styles */
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+    
+    .btn-outline-white {
+      background: transparent;
+      color: white;
+      border: 2px solid white;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-outline-white:hover {
+      background: white;
+      color: var(--primary);
+    }
+    
+    /* Subtle divider */
+    .divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, #cbd5e1, transparent);
+      margin: 2rem 0;
+    }
+    
+    /* Image styling */
+    .image-container {
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    
+    .emblam-img {
+      max-height: 80px;
+      object-fit: contain;
+    }
+    
+    .website-img {
+      height: 200px;
+      object-fit: cover;
+    }
+    
+    /* Hero section with emblem */
+    .hero-with-emblem {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+    }
+    
+    .emblem-container {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .emblem-box {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    @media (max-width: 768px) {
+      .hero-with-emblem {
+        flex-direction: column;
+        text-align: center;
+      }
     }
   </style>
 </head>
 
-<body class="text-white">
+<body class="text-gray-700">
   
-  <!-- Navbar -->
-  <header class="flex justify-between items-center p-6">
-    <h1 class="text-3xl font-bold tracking-wide">e-HRMS Portal</h1>
-    <a href="login.html" 
-       class="px-5 py-2 bg-blue-600 hover:bg-blue-700 rounded-xl">
-       Login
-    </a>
+  <!-- Subtle background pattern -->
+  <div class="bg-pattern"></div>
+  
+  <!-- Header with official colors -->
+  <header class="header-bg text-white">
+    <div class="container mx-auto px-4 py-4">
+      <div class="flex justify-between items-center">
+        <div class="flex items-center">
+          <div class="bg-white p-2 rounded-lg mr-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-800" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-2a1 1 0 00-1-1H9a1 1 0 00-1 1v2a1 1 0 01-1 1H4a1 1 0 110-2V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <div>
+            <h1 class="text-2xl font-bold">e-HRMS Portal</h1>
+            <p class="text-xs mt-1 opacity-80">Government of India Initiative</p>
+          </div>
+        </div>
+        
+        <div class="flex items-center space-x-4">
+          <!-- Language Toggle -->
+          <div class="lang-toggle" x-data="{ lang: 'en' }">
+            <div class="lang-option" 
+                 :class="{ 'active': lang === 'en' }" 
+                 @click="lang = 'en'">ENG</div>
+            <div class="lang-option hindi" 
+                 :class="{ 'active': lang === 'hi' }" 
+                 @click="lang = 'hi'">हिंदी</div>
+          </div>
+          
+          <a href="login.html" 
+             class="px-5 py-2 btn-primary rounded-md text-sm font-medium">
+             Login / लॉगिन
+          </a>
+        </div>
+      </div>
+    </div>
   </header>
 
-  <!-- Hero Section -->
-  <section class="flex flex-col items-center mt-20">
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-8 fade-in">
+    <!-- Hero Section with Emblem -->
+    <section class="mb-12">
+      <div class="govt-card rounded-lg p-8 max-w-6xl mx-auto">
+        <div class="hero-with-emblem">
+          <div class="emblem-container">
+            <div class="emblem-box">
+              <img src="https://raw.githubusercontent.com/imarshbir/class10/main/revibe1.jpg" 
+                   alt="Government Emblem" 
+                   class="emblam-img">
+            </div>
+          </div>
+          <div class="text-center flex-1">
+            <span class="official-badge inline-block mb-4">OFFICIAL WEBSITE</span>
+            <h2 class="text-3xl font-bold text-gray-800 mb-4">Human Resource Management System</h2>
+            <p class="hindi text-xl mb-2 text-gray-700">मानव संसाधन प्रबंधन प्रणाली</p>
+            <p class="text-gray-600 mb-6">Digital Service Book | Payroll | Promotions | Chatbot | Transfers | Leaves</p>
+            <p class="hindi text-gray-600 mb-6">डिजिटल सेवा पुस्तिका | पेरोल | पदोन्नति | चैटबॉट | स्थानांतरण | अवकाश</p>
+            <a href="login.html" class="inline-block px-6 py-3 btn-primary rounded-md text-lg font-medium">
+              Access Portal / पोर्टल एक्सेस करें
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    <!-- Glass Box -->
-    <div class="bg-white/10 backdrop-blur-xl border border-white/20 p-10 rounded-3xl w-[90%] md:w-[60%] shadow-xl text-center">
-      <h2 class="text-4xl font-bold mb-4">Welcome to the New HRMS Portal</h2>
-      <p class="text-gray-300 mb-6 text-lg">Digital Service Book | Payroll | Promotions | Chatbot | Transfers | Leaves</p>
-      <a href="login.html" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-xl">Get Started</a>
+    <!-- Full Blue Band -->
+    <section class="blue-band">
+      <div class="container mx-auto px-4">
+        <div class="text-center max-w-4xl mx-auto">
+          <h2 class="text-3xl font-bold mb-4">Digital India Initiative</h2>
+          <p class="hindi text-xl mb-4">डिजिटल इंडिया पहल</p>
+          <p class="text-lg mb-6 opacity-90">Transforming HR processes through technology and innovation for a New India</p>
+          
+          <div class="flex flex-wrap gap-4 justify-center">
+            <a href="#" class="px-6 py-2 btn-outline-white rounded-md font-medium">
+              Learn More
+            </a>
+            <a href="#" class="px-6 py-2 bg-white text-blue-800 rounded-md font-medium hover:bg-gray-100 transition">
+              Digital India
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Website Image Section -->
+    <section class="mb-12">
+      <div class="flex justify-center">
+        <div class="image-container max-w-4xl">
+          <img src="https://raw.githubusercontent.com/imarshbir/class10/main/website%20images.jpg" 
+               alt="HRMS Portal Interface" 
+               class="website-img w-full">
+        </div>
+      </div>
+    </section>
+
+    <!-- Divider -->
+    <div class="divider"></div>
+
+    <!-- Announcements Section -->
+    <section class="mb-12">
+      <div class="text-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800 mb-2">Latest Announcements</h2>
+        <p class="hindi text-lg text-gray-600">नवीनतम सूचनाएं</p>
+      </div>
+      
+      <div class="govt-card rounded-lg p-6 max-w-4xl mx-auto">
+        <div class="flex items-start mb-4 pb-4 border-b border-gray-200">
+          <div class="bg-blue-100 text-blue-800 px-3 py-1 rounded text-sm font-medium mr-4">NEW</div>
+          <div>
+            <h3 class="font-semibold text-gray-800">Digital Service Book Implementation</h3>
+            <p class="text-sm text-gray-600 mt-1">All employees are requested to update their service records by 30th November.</p>
+            <p class="hindi text-sm text-gray-600 mt-1">सभी कर्मचारियों से अनुरोध है कि वे 30 नवंबर तक अपनी सेवा रिकॉर्ड अपडेट करें।</p>
+            <p class="text-xs text-gray-500 mt-2">Posted on: 15 Oct 2023</p>
+          </div>
+        </div>
+        
+        <div class="flex items-start mb-4 pb-4 border-b border-gray-200">
+          <div class="bg-green-100 text-green-800 px-3 py-1 rounded text-sm font-medium mr-4">UPDATE</div>
+          <div>
+            <h3 class="font-semibold text-gray-800">New Payroll System</h3>
+            <p class="text-sm text-gray-600 mt-1">The updated payroll system will be live from 1st December 2023.</p>
+            <p class="hindi text-sm text-gray-600 mt-1">अपडेटेड पेरोल सिस्टम 1 दिसंबर 2023 से लाइव होगा।</p>
+            <p class="text-xs text-gray-500 mt-2">Posted on: 10 Oct 2023</p>
+          </div>
+        </div>
+        
+        <div class="flex items-start">
+          <div class="bg-amber-100 text-amber-800 px-3 py-1 rounded text-sm font-medium mr-4">REMINDER</div>
+          <div>
+            <h3 class="font-semibold text-gray-800">Annual Performance Review</h3>
+            <p class="text-sm text-gray-600 mt-1">The annual performance review cycle begins on 1st January 2024.</p>
+            <p class="hindi text-sm text-gray-600 mt-1">वार्षिक प्रदर्शन समीक्षा चक्र 1 जनवरी 2024 से शुरू होगा।</p>
+            <p class="text-xs text-gray-500 mt-2">Posted on: 5 Oct 2023</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Divider -->
+    <div class="divider"></div>
+
+    <!-- Services Section -->
+    <section class="mb-12">
+      <div class="text-center mb-10">
+        <h2 class="text-2xl font-bold text-gray-800 mb-2">Employee Services</h2>
+        <p class="hindi text-lg text-gray-600">कर्मचारी सेवाएं</p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Employee Records -->
+        <div class="govt-card rounded-lg p-6">
+          <div class="module-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-800 mb-2">Employee Records</h3>
+          <p class="hindi mb-2 text-gray-700">कर्मचारी रिकॉर्ड</p>
+          <p class="text-gray-600 text-sm">View digital profiles and service history.</p>
+          <p class="hindi text-gray-600 text-sm">डिजिटल प्रोफाइल और सेवा इतिहास देखें।</p>
+        </div>
+
+        <!-- Payroll -->
+        <div class="govt-card rounded-lg p-6">
+          <div class="module-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-800 mb-2">Payroll</h3>
+          <p class="hindi mb-2 text-gray-700">वेतन</p>
+          <p class="text-gray-600 text-sm">Salary, deductions, and monthly slips.</p>
+          <p class="hindi text-gray-600 text-sm">वेतन, कटौती और मासिक स्लिप।</p>
+        </div>
+
+        <!-- Leave Module -->
+        <div class="govt-card rounded-lg p-6">
+          <div class="module-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-800 mb-2">Leave Module</h3>
+          <p class="hindi mb-2 text-gray-700">अवकाश मॉड्यूल</p>
+          <p class="text-gray-600 text-sm">Apply for leave and track status.</p>
+          <p class="hindi text-gray-600 text-sm">अवकाश के लिए आवेदन करें और स्थिति ट्रैक करें।</p>
+        </div>
+
+        <!-- Transfers -->
+        <div class="govt-card rounded-lg p-6">
+          <div class="module-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-800 mb-2">Transfers</h3>
+          <p class="hindi mb-2 text-gray-700">स्थानांतरण</p>
+          <p class="text-gray-600 text-sm">Request transfers and check postings.</p>
+          <p class="hindi text-gray-600 text-sm">स्थानांतरण का अनुरोध करें और पोस्टिंग जांचें।</p>
+        </div>
+
+        <!-- Promotions -->
+        <div class="govt-card rounded-lg p-6">
+          <div class="module-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-800 mb-2">Promotions</h3>
+          <p class="hindi mb-2 text-gray-700">पदोन्नति</p>
+          <p class="text-gray-600 text-sm">Track promotions and pay-scale updates.</p>
+          <p class="hindi text-gray-600 text-sm">पदोन्नति और वेतनमान अपडेट ट्रैक करें।</p>
+        </div>
+
+        <!-- Chatbot Support -->
+        <div class="govt-card rounded-lg p-6">
+          <div class="module-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-800 mb-2">Chatbot Support</h3>
+          <p class="hindi mb-2 text-gray-700">चैटबॉट सहायता</p>
+          <p class="text-gray-600 text-sm">Ask queries, get instant HR help.</p>
+          <p class="hindi text-gray-600 text-sm">प्रश्न पूछें, तत्काल एचआर सहायता प्राप्त करें।</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-8">
+    <div class="container mx-auto px-4">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <div class="mb-4 md:mb-0">
+          <h3 class="text-lg font-bold">e-HRMS Portal</h3>
+          <p class="text-xs mt-2 opacity-70">Government of India Initiative</p>
+        </div>
+        
+        <div class="text-center md:text-right">
+          <p class="text-sm opacity-80">All rights reserved.</p>
+          <div class="mt-3 flex justify-center md:justify-end space-x-4">
+            <a href="#" class="text-sm opacity-80 hover:opacity-100 transition">Privacy Policy</a>
+            <a href="#" class="text-sm opacity-80 hover:opacity-100 transition">Terms of Service</a>
+            <a href="#" class="text-sm opacity-80 hover:opacity-100 transition">Contact</a>
+          </div>
+        </div>
+      </div>
     </div>
+  </footer>
 
-    <!-- Animated Module Cards -->
-    <div class="mt-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 w-[90%]">
-
-      <div class="p-6 bg-white/10 rounded-2xl shadow-xl backdrop-blur-xl border border-white/10 hover:scale-[1.05] transition cursor-pointer">
-        <h3 class="text-xl font-bold mb-2">Employee Records</h3>
-        <p class="text-gray-300">View digital profiles and service history.</p>
-      </div>
-
-      <div class="p-6 bg-white/10 rounded-2xl shadow-xl backdrop-blur-xl border border-white/10 hover:scale-[1.05] transition cursor-pointer">
-        <h3 class="text-xl font-bold mb-2">Payroll</h3>
-        <p class="text-gray-300">Salary, deductions, and monthly slips.</p>
-      </div>
-
-      <div class="p-6 bg-white/10 rounded-2xl shadow-xl backdrop-blur-xl border border-white/10 hover:scale-[1.05] transition cursor-pointer">
-        <h3 class="text-xl font-bold mb-2">Leave Module</h3>
-        <p class="text-gray-300">Apply for leave and track status.</p>
-      </div>
-
-      <div class="p-6 bg-white/10 rounded-2xl shadow-xl backdrop-blur-xl border border-white/10 hover:scale-[1.05] transition cursor-pointer">
-        <h3 class="text-xl font-bold mb-2">Transfers</h3>
-        <p class="text-gray-300">Request transfers and check postings.</p>
-      </div>
-
-      <div class="p-6 bg-white/10 rounded-2xl shadow-xl backdrop-blur-xl border border-white/10 hover:scale-[1.05] transition cursor-pointer">
-        <h3 class="text-xl font-bold mb-2">Promotions</h3>
-        <p class="text-gray-300">Track promotions and pay-scale updates.</p>
-      </div>
-
-      <div class="p-6 bg-white/10 rounded-2xl shadow-xl backdrop-blur-xl border border-white/10 hover:scale-[1.05] transition cursor-pointer">
-        <h3 class="text-xl font-bold mb-2">Chatbot Support</h3>
-        <p class="text-gray-300">Ask queries, get instant HR help.</p>
-      </div>
-
-    </div>
-  </section>
-
+  <script>
+    // Simple fade-in animation for content
+    document.addEventListener('DOMContentLoaded', function() {
+      const cards = document.querySelectorAll('.govt-card');
+      cards.forEach((card, index) => {
+        card.style.animationDelay = `${index * 0.1}s`;
+      });
+    });
+  </script>
 </body>
 </html>
