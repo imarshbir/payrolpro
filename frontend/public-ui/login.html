@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - eHRMS</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+  <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body class="bg-gradient-to-br from-purple-900 via-indigo-900 to-slate-900 h-screen flex items-center justify-center">
+
+  <div class="glass-box w-[90%] md:w-[35%] p-10">
+
+    <h2 class="text-3xl font-bold mb-6 text-center">Employee Login</h2>
+
+    <label class="block text-gray-300 mb-2">Department</label>
+    <select class="input-box mb-4">
+      <option>Select Department</option>
+      <option>Education</option>
+      <option>Health</option>
+      <option>IT Department</option>
+      <option>Transport</option>
+    </select>
+
+    <label class="block text-gray-300 mb-2">Employee ID</label>
+    <input type="text" class="input-box mb-4" placeholder="Enter Employee ID">
+
+    <label class="block text-gray-300 mb-2">Password</label>
+    <input type="password" class="input-box mb-6" placeholder="Enter Password">
+
+    <button class="w-full py-3 bg-blue-600 hover:bg-blue-700 rounded-xl">
+      Login
+    </button>
+
+    <p class="text-center text-gray-400 mt-4">Forgot Password?</p>
+  </div>
+
+</body>
+</html>
