@@ -1,0 +1,1 @@
+export default function Topbar(){return(<div className='w-full bg-white/10 backdrop-blur-lg border-b border-white/20 p-4 flex justify-end'>Hello, User</div>);}

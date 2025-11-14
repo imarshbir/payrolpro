@@ -1,0 +1,1 @@
+export default function Promotion(){return(<div className='p-10 ml-64'><h1 className='text-3xl font-bold mb-6'>Promotion</h1></div>);}

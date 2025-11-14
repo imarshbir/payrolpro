@@ -1,0 +1,1 @@
+export default function Card({title,text}){return(<div className='p-6 bg-white/10 border border-white/20 rounded-2xl'>{title}<p>{text}</p></div>);}

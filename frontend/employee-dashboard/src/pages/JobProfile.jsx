@@ -1,0 +1,1 @@
+export default function JobProfile(){return(<div className='p-10 ml-64'><h1 className='text-3xl font-bold mb-6'>Job Profile</h1></div>);}

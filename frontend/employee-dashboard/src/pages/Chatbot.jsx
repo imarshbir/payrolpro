@@ -1,0 +1,1 @@
+import {useState} from 'react';export default function Chatbot(){const[m,setM]=useState([]);return(<div className='p-10 ml-64'><h1 className='text-3xl font-bold mb-6'>Chatbot</h1></div>);}
