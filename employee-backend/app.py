@@ -1,139 +1,144 @@
-from flask import Flask, request, jsonify, session
+from flask import Flask, request, jsonify
 from flask_cors import CORS
-from pymongo import MongoClient
-import os
 
 app = Flask(__name__)
-app.secret_key = "supersecretkey123"
-CORS(app, supports_credentials=True)
+CORS(app)
 
-# ---------------------- DATABASE ----------------------
-mongo_uri = os.getenv("MONGO_URI")
-client = MongoClient(mongo_uri)
-db = client.get_database()
+# ---------------------------------------------------------------------
+#  Dummy IT Department User
+# ---------------------------------------------------------------------
+users = [
+    {
+        "email": "itdept@gov.in",
+        "password": "it123",
+        "name": "IT Officer",
+        "department": "IT"
+    }
+]
 
-employees = db.employees
-payrolls = db.payrolls
-leaves = db.leaves
-transfers = db.transfers
-promotions = db.promotions
-users = db.users
+# ---------------------------------------------------------------------
+#  Dummy Data: Employee Records
+# ---------------------------------------------------------------------
+employee_records = [
+    {
+        "id": 1,
+        "name": "Arshbir Singh",
+        "designation": "Junior Engineer",
+        "department": "Mechanical",
+        "joining_date": "2019-07-10"
+    },
+    {
+        "id": 2,
+        "name": "Simran Kaur",
+        "designation": "Senior Clerk",
+        "department": "Accounts",
+        "joining_date": "2017-03-22"
+    },
+    {
+        "id": 3,
+        "name": "Rohit Verma",
+        "designation": "Assistant",
+        "department": "IT",
+        "joining_date": "2018-12-05"
+    }
+]
 
-# ---------------------- SEED SAMPLE DATA ----------------------
-def seed_data():
-    if employees.count_documents({}) == 0:
-        employees.insert_many([
-            {
-                "name": "Amit Kumar",
-                "email": "amit@hrms.com",
-                "department": "IT",
-                "salary": 50000,
-                "employee_id": "EMP001"
-            },
-            {
-                "name": "Priya Sharma",
-                "email": "priya@hrms.com",
-                "department": "Finance",
-                "salary": 62000,
-                "employee_id": "EMP002"
-            }
-        ])
+# ---------------------------------------------------------------------
+#  Dummy Payroll Data
+# ---------------------------------------------------------------------
+payrolls = [
+    {"id": 1, "month": "Jan 2024", "employee": "Arshbir Singh", "salary": 42000, "deductions": 2000},
+    {"id": 2, "month": "Jan 2024", "employee": "Simran Kaur", "salary": 38000, "deductions": 1500},
+    {"id": 3, "month": "Jan 2024", "employee": "Rohit Verma", "salary": 45000, "deductions": 2300}
+]
 
-    if payrolls.count_documents({}) == 0:
-        payrolls.insert_many([
-            {"employee_id": "EMP001", "month": "Jan", "net_salary": 48000},
-            {"employee_id": "EMP002", "month": "Jan", "net_salary": 60000},
-        ])
+# ---------------------------------------------------------------------
+#  Dummy Leave Module Data
+# ---------------------------------------------------------------------
+leaves = [
+    {"id": 1, "employee": "Arshbir", "days": 2, "type": "Casual Leave", "status": "Approved"},
+    {"id": 2, "employee": "Simran", "days": 5, "type": "Sick Leave", "status": "Pending"},
+    {"id": 3, "employee": "Rohit", "days": 1, "type": "Casual Leave", "status": "Approved"},
+]
 
-    if leaves.count_documents({}) == 0:
-        leaves.insert_many([
-            {"employee_id": "EMP001", "days": 5, "type": "Sick Leave"},
-            {"employee_id": "EMP002", "days": 2, "type": "Casual Leave"},
-        ])
+# ---------------------------------------------------------------------
+#  Dummy Transfer Data
+# ---------------------------------------------------------------------
+transfers = [
+    {"id": 1, "employee": "Arshbir", "from": "Ludhiana", "to": "Patiala", "date": "2022-03-10"},
+    {"id": 2, "employee": "Simran", "from": "Chandigarh", "to": "Delhi", "date": "2021-09-15"},
+]
 
-    if transfers.count_documents({}) == 0:
-        transfers.insert_many([
-            {"employee_id": "EMP001", "from": "Lucknow", "to": "Kanpur"},
-        ])
+# ---------------------------------------------------------------------
+#  Dummy Promotion Data
+# ---------------------------------------------------------------------
+promotions = [
+    {"id": 1, "employee": "Arshbir", "old_post": "Junior Engineer", "new_post": "Engineer", "year": 2023},
+    {"id": 2, "employee": "Rohit", "old_post": "Assistant", "new_post": "Senior Assistant", "year": 2022},
+]
 
-    if promotions.count_documents({}) == 0:
-        promotions.insert_many([
-            {"employee_id": "EMP002", "old_role": "Junior Accountant", "new_role": "Senior Accountant"},
-        ])
-
-    if users.count_documents({}) == 0:
-        users.insert_one({
-            "email": "it@hrms.com",
-            "password": "123",
-            "role": "IT"
-        })
-
-seed_data()
-
-# ---------------------- AUTH ----------------------
+# ---------------------------------------------------------------------
+#  LOGIN API
+# ---------------------------------------------------------------------
 @app.route("/login", methods=["POST"])
 def login():
     data = request.json
-    user = users.find_one({"email": data["email"], "password": data["password"]})
+    email = data.get("email")
+    password = data.get("password")
 
-    if not user:
-        return jsonify({"success": False, "message": "Invalid login"})
+    for user in users:
+        if user["email"] == email and user["password"] == password:
+            return jsonify({
+                "message": "Login successful",
+                "role": user["department"],
+                "name": user["name"]
+            })
 
-    session["role"] = user["role"]
-    return jsonify({"success": True, "role": user["role"]})
+    return jsonify({"error": "Invalid email or password"}), 401
 
 
-# middleware
-def require_login():
-    if "role" not in session:
-        return False
-    return True
-
-# ---------------------- PROTECTED ROUTES ----------------------
-@app.route("/employees/all")
+# ---------------------------------------------------------------------
+#  API: Employee Records
+# ---------------------------------------------------------------------
+@app.route("/employees", methods=["GET"])
 def get_employees():
-    if not require_login():
-        return jsonify({"error": "Login required"}), 401
-    data = list(employees.find({}, {"_id": 0}))
-    return jsonify(data)
+    return jsonify(employee_records)
 
 
-@app.route("/payroll/all")
-def get_payroll():
-    if not require_login():
-        return jsonify({"error": "Login required"}), 401
-    data = list(payrolls.find({}, {"_id": 0}))
-    return jsonify(data)
+# ---------------------------------------------------------------------
+#  API: Payrolls
+# ---------------------------------------------------------------------
+@app.route("/payrolls", methods=["GET"])
+def get_payrolls():
+    return jsonify(payrolls)
 
 
-@app.route("/leaves/all")
+# ---------------------------------------------------------------------
+#  API: Leave Module
+# ---------------------------------------------------------------------
+@app.route("/leaves", methods=["GET"])
 def get_leaves():
-    if not require_login():
-        return jsonify({"error": "Login required"}), 401
-    data = list(leaves.find({}, {"_id": 0}))
-    return jsonify(data)
+    return jsonify(leaves)
 
 
-@app.route("/transfers/all")
+# ---------------------------------------------------------------------
+#  API: Transfers
+# ---------------------------------------------------------------------
+@app.route("/transfers", methods=["GET"])
 def get_transfers():
-    if not require_login():
-        return jsonify({"error": "Login required"}), 401
-    data = list(transfers.find({}, {"_id": 0}))
-    return jsonify(data)
+    return jsonify(transfers)
 
 
-@app.route("/promotions/all")
+# ---------------------------------------------------------------------
+#  API: Promotions
+# ---------------------------------------------------------------------
+@app.route("/promotions", methods=["GET"])
 def get_promotions():
-    if not require_login():
-        return jsonify({"error": "Login required"}), 401
-    data = list(promotions.find({}, {"_id": 0}))
-    return jsonify(data)
+    return jsonify(promotions)
 
 
-@app.route("/")
-def home():
-    return jsonify({"message": "Backend running"})
-
-
+# ---------------------------------------------------------------------
+#  RUN
+# ---------------------------------------------------------------------
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(debug=True)
