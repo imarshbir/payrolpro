@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Leave Module</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 p-6">
+
+<script>
+if (!localStorage.getItem("role")) {
+    alert("You need to login first!");
+    window.location.href = "login.html";
+}
+</script>
+
+<h2 class="text-3xl font-bold mb-4">Leave Records</h2>
+<a href="index.html" class="px-4 py-2 bg-blue-700 text-white rounded">⬅ Back</a>
+
+<table class="w-full mt-6 bg-white shadow rounded">
+  <thead class="bg-green-600 text-white">
+    <tr>
+      <th class="p-3">Employee ID</th>
+      <th class="p-3">Leave Days</th>
+      <th class="p-3">Type</th>
+    </tr>
+  </thead>
+  <tbody id="leaveTable"></tbody>
+</table>
+
+<script>
+fetch("https://payrolpro-1.onrender.com/leaves/all", {credentials:"include"})
+  .then(res => res.json())
+  .then(data => {
+    const tbody = document.querySelector("#leaveTable");
+    data.forEach(l => {
+      tbody.innerHTML += `
+        <tr class="border-b">
+          <td class="p-3">${l.employee_id}</td>
+          <td class="p-3">${l.days}</td>
+          <td class="p-3">${l.type}</td>
+        </tr>`;
+    });
+  });
+</script>
+
+</body>
+</html>
